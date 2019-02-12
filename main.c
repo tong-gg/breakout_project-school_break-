@@ -5,7 +5,7 @@
 
 #define True  1
 #define False 0
-#define WindowTitle  "Breakout"
+#define WindowTitle  "Breakout 61"
 #define WindowWidth  800
 #define WindowHeight 700
 

@@ -70,13 +70,13 @@ int main(int argc, char *args[])
     Event event;
 
     if (cpInit(WindowTitle, WindowWidth, WindowHeight) == False) {
-      printf("Window Initialization Failed!\n");
-      exit(1);
+        fprintf(stderr, "Window initialization failed!\n");
+        exit(1);
     }
 
     if (game_init() == False) {
-      printf("Game Initialization Failed!\n");
-      exit(1);
+        fprintf(stderr, "Game initialization failed!\n");
+        exit(1);
     }
 
     for (int n = 0, x = -10, y = 80; n < n_bricks; n++) {

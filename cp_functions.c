@@ -11,14 +11,14 @@ Texture cpLoadTexture(const char *filename)
     Texture texture;
 
     SDL_Surface *image = IMG_Load(filename);
-    if (image == NULL) {
-        printf("%s failed\n", filename);
+    if (!image) {
+        fprintf(stderr, "IMG_Load %s failed\n", filename);
         return NULL;
     }
 
-    texture = (Texture)malloc(sizeof(Texture *));
-    if (texture == NULL) {
-        printf("%s failed\n", filename);
+    texture = (Texture)malloc(sizeof(TextureStruct));
+    if (!texture) {
+        fprintf(stderr, "%s allocation failed\n", filename);
         SDL_FreeSurface(image);
         return NULL;
     }
@@ -89,7 +89,7 @@ void cpCheckSDLError(int line)
 {  const char *error = SDL_GetError();
 
     if (error[0]) {
-        printf("SDL Error: %s\nLine: %d\n", error, line);
+        fprintf(stderr, "SDL Error: %s\nLine: %d\n", error, line);
         SDL_ClearError();
     }
 }
@@ -104,12 +104,18 @@ int cpInit(const char *title, int win_width, int win_height)
                               SDL_WINDOWPOS_CENTERED,
                               win_width, win_height,
                               SDL_WINDOW_OPENGL);
-    if (window == NULL)
+    if (!window)
         return False;
 
     context = SDL_GL_CreateContext(window);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetSwapInterval(1);
+
+    int flags = IMG_INIT_JPG | IMG_INIT_PNG;
+    if (!(IMG_Init(flags) & flags)) {
+        fprintf(stderr, "IMG_Init failed: %s\n", IMG_GetError());
+        return False;
+    }
 
     if (TTF_Init() == -1)
         return False;
@@ -133,6 +139,9 @@ int cpInit(const char *title, int win_width, int win_height)
 
 void cpCleanUp()
 {
+    Mix_CloseAudio();
+    TTF_Quit();
+    IMG_Quit();
     SDL_Quit();
 }
 
@@ -174,7 +183,7 @@ void cpDrawText(int r, int g, int b,
     int texture_format, xb, xe, yb, ye;
 
     message = TTF_RenderUTF8_Blended(font, text, color);
-    if (message == NULL)
+    if (!message)
         return;
 
     if (message->format->BytesPerPixel == 3)

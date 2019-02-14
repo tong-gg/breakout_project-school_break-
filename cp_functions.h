@@ -23,11 +23,11 @@ typedef Mix_Music *Music;
 typedef Mix_Chunk *Sound;
 typedef SDL_Event Event;
 
-typedef struct
-{
+typedef struct {
     unsigned int tex_id;
     int width, height;
-} *Texture;
+} TextureStruct; 
+typedef TextureStruct *Texture;
 
 Texture cpLoadTexture(const char *filename);
 Font cpLoadFont(const char *font_file, int font_size);

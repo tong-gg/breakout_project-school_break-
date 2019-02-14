@@ -12,13 +12,13 @@ Texture cpLoadTexture(const char *filename)
 
     SDL_Surface *image = IMG_Load(filename);
     if (!image) {
-        fprintf(stderr, "IMG_Load %s failed\n", filename);
+        fprintf(stderr, "IMG_Load %s failed!\n", filename);
         return NULL;
     }
 
     texture = (Texture)malloc(sizeof(TextureStruct));
     if (!texture) {
-        fprintf(stderr, "%s allocation failed\n", filename);
+        fprintf(stderr, "%s allocation failed!\n", filename);
         SDL_FreeSurface(image);
         return NULL;
     }
@@ -89,7 +89,7 @@ void cpCheckSDLError(int line)
 {  const char *error = SDL_GetError();
 
     if (error[0]) {
-        fprintf(stderr, "SDL Error: %s\nLine: %d\n", error, line);
+        fprintf(stderr, "SDL Error: %s\nLine: %d!\n", error, line);
         SDL_ClearError();
     }
 }
@@ -113,7 +113,7 @@ int cpInit(const char *title, int win_width, int win_height)
 
     int flags = IMG_INIT_JPG | IMG_INIT_PNG;
     if (!(IMG_Init(flags) & flags)) {
-        fprintf(stderr, "IMG_Init failed: %s\n", IMG_GetError());
+        fprintf(stderr, "IMG_Init failed: %s!\n", IMG_GetError());
         return False;
     }
 

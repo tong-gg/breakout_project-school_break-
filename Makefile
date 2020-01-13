@@ -1,7 +1,7 @@
 CC = gcc
 
 CFLAGS = $(shell sdl2-config --cflags) 
-LDFLAGS = $(shell sdl2-config --libs) -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lopengl32
+LDFLAGS = $(shell sdl2-config --libs) -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lopengl32 -lm
 
 all: breakout.exe
 

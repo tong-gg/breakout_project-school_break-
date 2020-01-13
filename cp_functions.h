@@ -8,25 +8,25 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 
-#define True      1
-#define False     0
+#define True 1
+#define False 0
 
-#define QUIT      SDL_QUIT
-#define KEYUP     SDL_KEYUP
-#define KEYDOWN   SDL_KEYDOWN
-#define K_ESCAPE  SDLK_ESCAPE
-#define K_LEFT    SDLK_LEFT
-#define K_RIGHT   SDLK_RIGHT
+#define QUIT SDL_QUIT
+#define KEYUP SDL_KEYUP
+#define KEYDOWN SDL_KEYDOWN
+#define K_ESCAPE SDLK_ESCAPE
+#define K_LEFT SDLK_LEFT
+#define K_RIGHT SDLK_RIGHT
 
-typedef TTF_Font  *Font;
+typedef TTF_Font *Font;
 typedef Mix_Music *Music;
 typedef Mix_Chunk *Sound;
 typedef SDL_Event Event;
 
 typedef struct {
-    unsigned int tex_id;
-    int width, height;
-} TextureStruct; 
+   unsigned int tex_id;
+   int width, height;
+} TextureStruct;
 typedef TextureStruct *Texture;
 
 Texture cpLoadTexture(const char *filename);
@@ -43,7 +43,7 @@ void cpCleanUp();
 void cpSwapBuffers();
 void cpDelay(int millisecond);
 int cbEventListener(Event *event);
-void cpDrawTexture(int r, int g, int b, 
+void cpDrawTexture(int r, int g, int b,
                    int x, int y, int width, int height, Texture texture);
 void cpDrawText(int r, int g, int b,
                 int x, int y, const char *text, Font font, int center);

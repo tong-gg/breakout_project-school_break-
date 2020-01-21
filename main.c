@@ -58,13 +58,18 @@ int game_init()
 // Special Objects
 Texture ghost_texture;
 Object ghost = {0, WindowHeight / 2, 0, 0, 50, 50, True};
+int ready_to_swap=1;
 pthread_t ghost_thread;
 
 void *ghostBot(void *ptr)
 {  double timestep=0;
-   float vel_x=0.0001;
+   float vel_x=5;
 
    while (True) {
+      if (!ready_to_swap) {
+         usleep(1000);
+         continue;
+      }
       if (ghost.pos_x < 0) {
          ghost.pos_x = 0;
          vel_x *= -1.;
@@ -76,7 +81,7 @@ void *ghostBot(void *ptr)
       ghost.pos_x += vel_x;
       ghost.pos_y = WindowHeight/2 + 50*sin(8*M_PI*timestep/(WindowWidth - ghost.width));
       timestep += fabs(vel_x);
-      usleep(100);
+      ready_to_swap = 0;
    }
 }
 
@@ -126,6 +131,7 @@ int main(int argc, char *args[])
                     ball.pos_x, ball.pos_y, ball.width, ball.height, ball_texture);
       cpDrawTexture(255, 255, 255,
                     ghost.pos_x, ghost.pos_y, ghost.width, ghost.height, ghost_texture);
+      ready_to_swap = 1;
       for (int n = 0; n < n_bricks; n++) {
          if (bricks[n].active)
             cpDrawTexture(255, 255, 255,

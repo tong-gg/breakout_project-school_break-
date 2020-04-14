@@ -7,7 +7,7 @@
 
 #define WindowTitle "Breakout 62"
 #define WindowWidth 800
-#define WindowHeight 700
+#define WindowHeight 600
 
 Sound hit_paddle_sound, hit_brick_sound;
 Sound hit_top_sound, end_sound;
@@ -63,7 +63,7 @@ pthread_t ghost_thread;
 
 void *ghostBot(void *ptr)
 {  double timestep=0;
-   float vel_x=5;
+   float vel_x=2;
 
    while (True) {
       if (!ready_to_swap) {
@@ -91,7 +91,7 @@ int main(int argc, char *args[])
       BALL_VEL_Y = -5,
       PADDLE_VEL_X = 7
    };
-   int running, n_bricks = 15, n_hits = 0, score = 0;
+   int running, n_bricks = 30, n_hits = 0, score = 0;
    char msg[80];
    Object bricks[n_bricks];
    Object ball = {WindowWidth / 2 - 12, 350, 0, BALL_VEL_Y, 24, 24, True};
@@ -109,13 +109,30 @@ int main(int argc, char *args[])
    }
 
    for (int n = 0, x = -10, y = 80; n < n_bricks; n++) {
-      bricks[n].pos_x = x;
-      bricks[n].pos_y = y;
-      bricks[n].width = 55;
-      bricks[n].height = 18;
-      bricks[n].active = True;
-      x += bricks[n].width;
+      if (n >= n_bricks / 2){
+         if(n == (n_bricks / 2)){
+            x = -10;
+         }
+         bricks[n].pos_x = x;
+         bricks[n].pos_y = y + 18;
+         bricks[n].width = 55;
+         bricks[n].height = 18;
+         bricks[n].active = True;
+
+         x += bricks[n].width;
+      }
+      else{
+         bricks[n].pos_x = x;
+         bricks[n].pos_y = y;
+         bricks[n].width = 55;
+         bricks[n].height = 18;
+         bricks[n].active = True;
+
+         x += bricks[n].width;
+      }
+     
    }
+
 
    ghost_texture = cpLoadTexture("ghost.png");
    pthread_create(&ghost_thread, NULL, ghostBot, (void *)NULL);
@@ -129,21 +146,28 @@ int main(int argc, char *args[])
                     paddle.pos_x, paddle.pos_y, paddle.width, paddle.height, paddle_texture);
       cpDrawTexture(255, 255, 255,
                     ball.pos_x, ball.pos_y, ball.width, ball.height, ball_texture);
-      cpDrawTexture(255, 255, 255,
-                    ghost.pos_x, ghost.pos_y, ghost.width, ghost.height, ghost_texture);
+      // cpDrawTexture(255, 255, 255,
+      //               ghost.pos_x, ghost.pos_y, ghost.width, ghost.height, ghost_texture);
       ready_to_swap = 1;
       for (int n = 0; n < n_bricks; n++) {
          if (bricks[n].active)
-            cpDrawTexture(255, 255, 255,
+            if(n % 2 != 0){
+            cpDrawTexture(128, 93, 78,
                           bricks[n].pos_x, bricks[n].pos_y, bricks[n].width, bricks[n].height,
                           brick_texture);
+            }
+            else{
+             cpDrawTexture(255, 132, 79,
+                          bricks[n].pos_x, bricks[n].pos_y, bricks[n].width, bricks[n].height,
+                          brick_texture);  
+            }
       }
       sprintf(msg, "คะแนน %d", score);
       cpDrawText(255, 255, 255, 3, 3, msg, small_font, 0);
       
-      if (ball.pos_y + ball.width > WindowHeight || n_hits == n_bricks) {
+      if (ball.pos_y > WindowHeight || n_hits == n_bricks) {
          cpPlaySound(end_sound);
-         cpDrawText(255, 255, 0, 400, 350, "จบเกมจบกัน", big_font, 1);
+         cpDrawText(255, 255, 0, 400, WindowHeight / 2, "Game Over!", big_font, 1);
          cpSwapBuffers();
          while (True) {
             cbEventListener(&event);
@@ -208,6 +232,7 @@ int main(int argc, char *args[])
       if (collide(ball, paddle)) {
          cpPlaySound(hit_paddle_sound);
          ball.vel_y = -ball.vel_y;
+
       }
 
       cpDelay(10);

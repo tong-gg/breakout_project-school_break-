@@ -8,7 +8,7 @@
 #define WindowTitle "Breakout 62"
 #define WindowWidth 800
 #define WindowHeight 600
-
+ 
 Sound hit_paddle_sound, hit_brick_sound;
 Sound hit_top_sound, end_sound;
 Texture paddle_texture, ball_texture;
